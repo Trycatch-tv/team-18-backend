@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Products;
 
 class ProductController extends Controller
 {
@@ -12,7 +13,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Products::all();
+        return response()->json($products);
     }
 
     /**
@@ -20,7 +22,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'price' => 'required|numeric|decimal:16,2',
+            'category_id' => 'required|exists:categories,id',
+            'stock' => 'required|numeric',
+            'description' => 'required|string|max:255',
+            'image_url' => 'required|string|max:150',
+        ]);
+        $product = Products::create($request->all());
+        return response()->json($product);
     }
 
     /**
@@ -28,7 +39,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Products::findOrFail($id);
+        return response()->json($product);
     }
 
     /**
@@ -36,7 +48,17 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'price' => 'required|numeric|decimal:16,2',
+            'category_id' => 'required|exists:categories,id',
+            'stock' => 'required|numeric',
+            'description' => 'required|string|max:255',
+            'image_url' => 'required|string|max:150',
+        ]);
+        $product = Products::findOrFail($id);
+        $product->update($request->all());
+        return response()->json($product);
     }
 
     /**
@@ -44,6 +66,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Products::findOrFail($id);
+        $product->delete();
+        return response()->json($product);
     }
 }
