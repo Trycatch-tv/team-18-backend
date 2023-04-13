@@ -43,7 +43,6 @@ class CategoryController extends Controller
             return response()->json($errors, 400);
         }
 
-        // TODO: Falta ver messages de error de la validaciones. Funciona pero no devuelve un json de messages
         $category = Categories::create($request->all());
         return response()->json([
             'status' => 201,
