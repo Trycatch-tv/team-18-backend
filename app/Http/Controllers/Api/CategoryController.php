@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use Illuminate\Http\Request;
-use App\Http\Requests\CategoryRequest;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -14,22 +14,42 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Categories::all();
-        return response()->json($categories);
+        $categories = Categories::orderBy('id', 'DESC')->paginate(15);
+        return response()->json($categories, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryRequest  $request)
+    public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required',
-        ]);
+        ];
 
-        // TODO: Falta ver mensajes de error de la validaciones. Funciona pero no devuelve un json de mensajes
+        $messages = [
+            'name.required' => 'Se requiere un Nombre para la Categoría',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            $errors = [
+                'status' => 400,
+                'message' => 'Oops we have detected errors',
+                'errors' => $validator->errors(),
+            ];
+
+            return response()->json($errors, 400);
+        }
+
+        // TODO: Falta ver messages de error de la validaciones. Funciona pero no devuelve un json de messages
         $category = Categories::create($request->all());
-        return response()->json($category, 201);
+        return response()->json([
+            'status' => 201,
+            'message' => 'Category created successfully',
+            'data' => $category,
+        ], 201);
     }
 
     /**
@@ -37,14 +57,17 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-        $category = Categories::find($id);
+        $category = Categories::orderBy('id', 'DESC')->find($id);
         if ($category == null) {
-            $msg = [
-                "mensaje" => "No hay ninguna categoria con el id ingresado, ingrese otro por favor",
-            ];
-            return response()->json($msg, 404);
+            return response()->json([
+                'status' => 400,
+                'message' => "There is no category with the id entered, please enter another one",
+            ], 400);
         }
-        return response()->json($category);
+        return response()->json([
+            'status' => 200,
+            'data' => $category,
+        ], 200);
     }
 
     /**
@@ -52,33 +75,41 @@ class CategoryController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $category = Categories::find($id);
+        $category = Categories::orderBy('id', 'DESC')->find($id);
 
-        if ($category == null) {
-            $msg = [
-                "mensaje" => "No hay ninguna categoria con el id ingresado, ingrese otro por favor",
+        return response()->json([
+            'status' => 400,
+            'message' => "There is no category with the id entered, please enter another one",
+        ], 400);
+
+        // Ok: Validacion lista
+
+        $rules = [
+            'name' => 'required',
+        ];
+
+        $messages = [
+            'name.required' => 'Se requiere un Nombre para la Categoría',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            $errors = [
+                'status' => 400,
+                'message' => 'Oops we have detected errors',
+                'errors' => $validator->errors(),
             ];
-            return response()->json($msg, 404);
+
+            return response()->json($errors, 400);
         }
 
-        // TODO: Falta ver mensajes de error de la validaciones. Funciona pero no devuelve un json de mensajes
-
-        $request->validate( [
-            'name' => 'required',
-        ]);
-
-        // if ($validator->fails()) {
-        //     $errors = $validator->errors();
-
-        //     $response = response()->json([
-        //         'message' => 'Invalid data send',
-        //         'details' => $errors->messages(),
-        //     ], 422);
-        // }
-
-
         $category->update($request->all());
-        return response()->json($category);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Category updated successfully',
+            'data' => $category,
+        ], 200);
     }
 
     /**
@@ -86,8 +117,18 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Categories::findOrFail($id);
+        $category = Categories::find($id);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'message' => "There is no category with the id entered, please enter another one",
+            ], 400);
+        }
+
         $category->delete();
-        return response()->json($category);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Category deleted successfully'
+        ], 200);
     }
 }

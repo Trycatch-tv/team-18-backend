@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 // use Database\Factories\ProductsFactory;
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +21,7 @@ class DatabaseSeeder extends Seeder
         Categories::factory()->count(5)->create();
         Products::factory()->count(25)->create();
 
-        // \App\Models\User::factory(10)->create();
+        User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
