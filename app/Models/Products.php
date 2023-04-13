@@ -11,10 +11,9 @@ class Products extends Model
 
     protected $fillable = ['name', 'price', 'categories_id', 'stock', 'description', 'image_url'];
     protected $table = 'products';
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at', 'category_id'];
 
-    public function cat()
-    {
-        return $this->hasOne(Category::class, 'id', 'categories_id');
+    public function category(){
+        return $this->belongsTo(Categories::class);
     }
 }

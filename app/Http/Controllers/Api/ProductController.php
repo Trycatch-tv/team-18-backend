@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Products;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Products::all();
+        $products = Products::with('category')->orderBy('id', 'DESC')->get();
         return response()->json($products);
     }
 
@@ -39,7 +39,13 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Products::findOrFail($id);
+        $product = Products::with('category')->find($id);
+        if ($product == null) {
+            $msg = [
+                "mensaje" => "No hay ningun producto con el id ingresado, ingrese otro por favor",
+            ];
+            return response()->json($msg, 404);
+        }
         return response()->json($product);
     }
 
@@ -48,6 +54,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $product = Products::with('category')->find($id);
+        if ($product == null) {
+            $msg = [
+                "mensaje" => "No hay ningun producto con el id ingresado, ingrese otro por favor",
+            ];
+            return response()->json($msg, 404);
+        }
         $request->validate([
             'name' => 'required|string|max:100',
             'price' => 'required|numeric|decimal:16,2',
@@ -56,7 +69,6 @@ class ProductController extends Controller
             'description' => 'required|string|max:255',
             'image_url' => 'required|string|max:150',
         ]);
-        $product = Products::findOrFail($id);
         $product->update($request->all());
         return response()->json($product);
     }
@@ -66,7 +78,13 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = Products::findOrFail($id);
+        $product = Products::find($id);
+        if ($product == null) {
+            $msg = [
+                "mensaje" => "No hay ningun producto con el id ingresado, ingrese otro por favor",
+            ];
+            return response()->json($msg, 404);
+        }
         $product->delete();
         return response()->json($product);
     }

@@ -18,10 +18,8 @@ return new class extends Migration
             $table->integer('stock');
             $table->decimal('price', 16, 2);
             $table->string('image_url', 150);
-            $table->foreignId('categories_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->timestamps();
         });
     }

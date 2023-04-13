@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Categories;
+use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -20,33 +21,62 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest  $request)
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
         ]);
+
+        // TODO: Falta ver mensajes de error de la validaciones. Funciona pero no devuelve un json de mensajes
         $category = Categories::create($request->all());
-        return response()->json($category);
+        return response()->json($category, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        $category = Categories::findOrFail($id);
+        $category = Categories::find($id);
+        if ($category == null) {
+            $msg = [
+                "mensaje" => "No hay ninguna categoria con el id ingresado, ingrese otro por favor",
+            ];
+            return response()->json($msg, 404);
+        }
         return response()->json($category);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
-        $request->validate([
-            'name' => 'required'
+        $category = Categories::find($id);
+
+        if ($category == null) {
+            $msg = [
+                "mensaje" => "No hay ninguna categoria con el id ingresado, ingrese otro por favor",
+            ];
+            return response()->json($msg, 404);
+        }
+
+        // TODO: Falta ver mensajes de error de la validaciones. Funciona pero no devuelve un json de mensajes
+
+        $request->validate( [
+            'name' => 'required',
         ]);
-        $category = Categories::findOrFail($id);
+
+        // if ($validator->fails()) {
+        //     $errors = $validator->errors();
+
+        //     $response = response()->json([
+        //         'message' => 'Invalid data send',
+        //         'details' => $errors->messages(),
+        //     ], 422);
+        // }
+
+
         $category->update($request->all());
         return response()->json($category);
     }
