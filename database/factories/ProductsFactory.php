@@ -30,7 +30,7 @@ class ProductsFactory extends Factory
             'description' => $this->faker->text(),
             'price' => $this->faker->randomElement([9.99,25.99,99.99]),
             'stock' => $this->faker->randomElement([1,50,100]),
-            'image_url' => $this->faker->imageUrl(800,600),
+            'image' => $this->faker->imageUrl(800,600),
             'category_id' => $category->id,
 
         ];

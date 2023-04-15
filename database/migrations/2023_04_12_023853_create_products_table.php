@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('description', 255);
             $table->integer('stock');
             $table->decimal('price', 16, 2);
-            $table->string('image_url', 150);
+            $table->string('image', 255)->nullable();
+            $table->string('image_path', 255)->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->timestamps();

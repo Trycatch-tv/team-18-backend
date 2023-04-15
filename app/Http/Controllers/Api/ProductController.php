@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Products;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -23,31 +25,46 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|numeric',
-            'description' => 'required|string|max:255',
-            'image_url' => 'required|string|max:150',
-        ];
+        $product = new Products();
+        $file = $request->file('image');
+        $nombre = e($request->input('name'));
 
-        // Por si quieren mensajes en español
-        $messages = [
-            'name.required' => 'Se requiere un nombre para el producto',
-            'name.max' => 'Solo se aceptan 100 caracteres como máximo',
-            'price.required' => 'Se requiere un precio para el producto',
-            'price.numeric' => 'El campo de precio debe ser un número.',
-            'price.decimal' => 'El campo de precio debe tener 16-2 decimales',
-            'category_id.required' => 'Debes ingresar una categoria para el producto',
-            'category_id.exists' => 'Debes ingresar una categoria valida para el producto',
-            'stock.required' => 'Se requiere una cantidad para el producto',
-            'stock.numeric' => 'El campo de stock debe ser un número.',
-            'description.required' => 'Se requiere una descripcion para el producto',
-            'description.max' => 'Solo se aceptan 255 caracteres como máximo',
-            'image_url.required' => 'Se requiere una url para la imagen del producto',
-            'image_url.max' => 'Solo se aceptan 150 caracteres como máximo',
-        ];
+        if ($request->hasFile('image')) {
+            $rules = [
+                'name' => 'required|string|max:100',
+                'price' => 'required|numeric',
+                'category_id' => 'required|exists:categories,id',
+                'stock' => 'required|numeric',
+                'description' => 'required|string|max:255',
+                'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                // 'image_url' => 'required|string|max:150',
+            ];
+
+            if (!Storage::disk('public')->exists('products')) {
+                Storage::disk('public')->makeDirectory('products', 0775, true);
+            }
+            $slug = Str::slug($nombre, '-');
+            $fileExt = $file->getClientOriginalExtension();
+            $size = $file->getSize();
+            $fileName = rand(1, 9999) . '-' . Str::slug($nombre) . '.' . $fileExt;
+            $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
+            $filesystem = Storage::disk('public');
+            $filesystem->putFileAs('products', $file, $fileName);
+
+            $product->image = $final_file;
+            $product->image_path = $fileName;
+        } else {
+            $rules = [
+                'name' => 'required|string|max:100',
+                'price' => 'required|numeric',
+                'category_id' => 'required|exists:categories,id',
+                'stock' => 'required|numeric',
+                'description' => 'required|string|max:255',
+                'image' => 'required|string|max:2048',
+            ];
+
+            $product->image = $request->input('image');
+        }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -62,12 +79,26 @@ class ProductController extends Controller
         }
 
         // TODO: Ver temas de aumentar o disminuir stock
-        $product = Products::create($request->all());
-        return response()->json([
-            'status' => 200,
-            'message' => 'Product created successfully',
-            'data' => $product,
-        ], 200);
+        // Guarda la ruta del archivo en la base de datos o realiza otra acción necesaria
+        $product->name = Str::headline($nombre);
+        $product->price = $request->input('price');
+        $product->stock = $request->input('stock');
+        $product->description = $request->input('description');
+        $product->category_id = $request->input('category_id');
+
+        if ($product->save()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product created successfully',
+                'data' => $product,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Failed to create the product',
+            ], 400);
+        }
+
     }
 
     /**
@@ -91,39 +122,63 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(string $id, Request $request)
     {
         $product = Products::with('category')->orderBy('id', 'DESC')->find($id);
+
         if ($product == null) {
             return response()->json([
                 'status' => 400,
                 'message' => "There is no product with the id entered, please enter another one",
             ], 400);
         }
-        $rules = [
-            'name' => 'required|string|max:100',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'stock' => 'required|numeric',
-            'description' => 'required|string|max:255',
-            'image_url' => 'required|string|max:150',
-        ];
 
-        $messages = [
-            'name.required' => 'Se requiere un nombre para el producto',
-            'name.max' => 'Solo se aceptan 100 caracteres como máximo',
-            'price.required' => 'Se requiere un precio para el producto',
-            'price.numeric' => 'El campo de precio debe ser un número.',
-            'price.decimal' => 'El campo de precio debe tener 16-2 decimales',
-            'category_id.required' => 'Debes ingresar una categoria para el producto',
-            'category_id.exists' => 'Debes ingresar una categoria valida para el producto',
-            'stock.required' => 'Se requiere una cantidad para el producto',
-            'stock.numeric' => 'El campo de stock debe ser un número.',
-            'description.required' => 'Se requiere una descripcion para el producto',
-            'description.max' => 'Solo se aceptan 255 caracteres como máximo',
-            'image_url.required' => 'Se requiere una url para la imagen del producto',
-            'image_url.max' => 'Solo se aceptan 150 caracteres como máximo',
-        ];
+        // return $request;
+        $file = $request->file('image');
+        $nombre = e($request->input('name'));
+        $image_path_bd = $product->image_path;
+
+        // return $file;
+        if ($request->hasFile('image')) {
+            if (isset($image_path_bd)) {
+                // esto va bien
+                Storage::disk('public')->delete('products/' . $product->image_path);
+            }
+
+            $rules = [
+                'name' => 'required|string|max:100',
+                'price' => 'required|numeric',
+                'category_id' => 'required|exists:categories,id',
+                'stock' => 'required|numeric',
+                'description' => 'required|string|max:255',
+                'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            ];
+
+            if (!Storage::disk('public')->exists('products')) {
+                Storage::disk('public')->makeDirectory('products', 0775, true);
+            }
+            $slug = Str::slug($nombre, '-');
+            $fileExt = $file->getClientOriginalExtension();
+            $size = $file->getSize();
+            $fileName = rand(1, 9999) . '-' . Str::slug($nombre) . '.' . $fileExt;
+            $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
+            $filesystem = Storage::disk('public');
+            $filesystem->putFileAs('products', $file, $fileName);
+
+            $product->image = $final_file;
+            $product->image_path = $fileName;
+        } else {
+            $rules = [
+                'name' => 'required|string|max:100',
+                'price' => 'required|numeric',
+                'category_id' => 'required|exists:categories,id',
+                'stock' => 'required|numeric',
+                'description' => 'required|string|max:255',
+                'image' => 'required|string|max:2048',
+            ];
+
+            $product->image = $request->input('image');
+        }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -133,14 +188,30 @@ class ProductController extends Controller
                 'messages' => 'Oops we have detected errors',
                 'errors' => $validator->errors(),
             ];
+
+            return response()->json($errores, 400);
         }
 
-        $product->update($request->all());
-        return response()->json([
-            'status' => 200,
-            'message' => 'Product updated successfully',
-            'data' => $product,
-        ], 200);
+        // Guarda la ruta del archivo en la base de datos o realiza otra acción necesaria
+        $product->name = Str::headline($nombre);
+        $product->price = $request->input('price');
+        $product->stock = $request->input('stock');
+        $product->description = $request->input('description');
+        $product->category_id = $request->input('category_id');
+
+        if ($product->save()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product updated successfully',
+                'data' => $product,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Failed to update the product',
+            ], 400);
+        }
+
     }
 
     /**
@@ -154,6 +225,11 @@ class ProductController extends Controller
                 'status' => 400,
                 'message' => "There is no product with the id entered, please enter another one",
             ], 400);
+        }
+        $image_path_bd = $product->image_path;
+        if (isset($image_path_bd)) {
+            // esto va bien
+            Storage::disk('public')->delete('products/' . $product->image_path);
         }
         $product->delete();
         return response()->json([

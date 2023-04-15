@@ -41,7 +41,44 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'throw' => false,
+            'throw' => true,
+        ],
+
+        'uploads' => [
+            'driver' => 'local',
+            // 'root' => config('aws.server_uploads_path'),
+            'root' => storage_path('app/public'),
+            'url'=>env('APP_URL').'/',
+            'permissions' => [
+                'file' => [
+                    'public' => 0644,
+                    'private' => 0600,
+                ],
+                'dir' => [
+                    'public' => 0755,
+                    'private' => 0700,
+                ],
+            ],
+            'visivility' => 'private',
+        ],
+
+        'uploads2' => [
+            'driver' => 'local',
+            // 'root' => config('aws.server_uploads_path'),
+            'root' => 'public',
+            // 'root' => storage_path('app/public'),
+            'url'=>env('APP_URL').'/',
+            'permissions' => [
+                'file' => [
+                    'public' => 0644,
+                    'private' => 0600,
+                ],
+                'dir' => [
+                    'public' => 0755,
+                    'private' => 0700,
+                ],
+            ],
+            'visivility' => 'private',
         ],
 
         's3' => [
