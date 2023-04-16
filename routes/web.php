@@ -32,3 +32,4 @@ Route::get('/products/{filename}', function ($filename) {
 
     return $response;
 });
+

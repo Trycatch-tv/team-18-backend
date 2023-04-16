@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 use App\Models\Categories;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,11 @@ class CategoriesFactory extends Factory
     protected $model = Categories::class;
     public function definition(): array
     {
+        $user = User::all()->random();
+
         return [
-            'name' => $this->faker->sentence(2)
+            'name' => $this->faker->sentence(2),
+            'user_id' => $user->id,
         ];
     }
 }

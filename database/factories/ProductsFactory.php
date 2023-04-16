@@ -3,6 +3,7 @@
 namespace Database\Factories;
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class ProductsFactory extends Factory
     public function definition(): array
     {
         $category = Categories::all()->random();
+        $user = User::all()->random();
         // $fakerFileName = $this->faker->image(
         //     storage_path("app/public"),
         //     800,
@@ -32,6 +34,7 @@ class ProductsFactory extends Factory
             'stock' => $this->faker->randomElement([1,50,100]),
             'image' => $this->faker->imageUrl(800,600),
             'category_id' => $category->id,
+            'user_id' => $user->id,
 
         ];
     }

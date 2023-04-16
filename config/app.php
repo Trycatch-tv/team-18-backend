@@ -55,6 +55,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'url_front' => env('FRONTEND_URL'),
+    'url_logo' => env('URL_LOGO'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -211,5 +213,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
+
+
+
 
 ];

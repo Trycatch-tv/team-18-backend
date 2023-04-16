@@ -8,15 +8,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $products = Products::with('category')->orderBy('id', 'DESC')->paginate(15);
+        $products = Products::with('category')->with('user')->orderBy('id', 'DESC')->paginate(15);
         return response()->json($products, 200);
     }
 
@@ -106,7 +112,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = Products::with('category')->orderBy('id', 'DESC')->find($id);
+        $product = Products::with('category')->with('user')->orderBy('id', 'DESC')->find($id);
         if ($product == null) {
             return response()->json([
                 'status' => 400,

@@ -9,12 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = Categories::orderBy('id', 'DESC')->paginate(15);
+        $categories = Categories::with('user')->orderBy('id', 'DESC')->paginate(15);
         return response()->json($categories, 200);
     }
 
@@ -56,7 +60,7 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-        $category = Categories::orderBy('id', 'DESC')->find($id);
+        $category = Categories::with('user')->orderBy('id', 'DESC')->find($id);
         if ($category == null) {
             return response()->json([
                 'status' => 400,
