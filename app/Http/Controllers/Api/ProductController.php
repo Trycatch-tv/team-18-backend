@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
+
 class ProductController extends Controller
 {
 
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->middleware('verified');
+
     }
     /**
      * Display a listing of the resource.
@@ -86,11 +89,12 @@ class ProductController extends Controller
 
         // TODO: Ver temas de aumentar o disminuir stock
         // Guarda la ruta del archivo en la base de datos o realiza otra acción necesaria
-        $product->name = Str::headline($nombre);
+        $product->name = $nombre;
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
-        $product->description = $request->input('description');
+        $product->description = e($request->input('description'));
         $product->category_id = $request->input('category_id');
+        $product->user_id = auth()->user()->id;
 
         if ($product->save()) {
             return response()->json([
@@ -166,7 +170,7 @@ class ProductController extends Controller
             $slug = Str::slug($nombre, '-');
             $fileExt = $file->getClientOriginalExtension();
             $size = $file->getSize();
-            $fileName = rand(1, 9999) . '-' . Str::slug($nombre) . '.' . $fileExt;
+            $fileName = rand(1, 9999) . '-' . $slug . '.' . $fileExt;
             $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
             $filesystem = Storage::disk('public');
             $filesystem->putFileAs('products', $file, $fileName);
@@ -199,11 +203,12 @@ class ProductController extends Controller
         }
 
         // Guarda la ruta del archivo en la base de datos o realiza otra acción necesaria
-        $product->name = Str::headline($nombre);
+        $product->name = $nombre;
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
-        $product->description = $request->input('description');
+        $product->description = e($request->input('description'));
         $product->category_id = $request->input('category_id');
+        $product->user_id = auth()->user()->id;
 
         if ($product->save()) {
             return response()->json([

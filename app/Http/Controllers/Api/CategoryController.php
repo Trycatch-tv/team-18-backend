@@ -12,6 +12,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->middleware('verified');
     }
     /**
      * Display a listing of the resource.
@@ -47,12 +48,22 @@ class CategoryController extends Controller
             return response()->json($errors, 400);
         }
 
-        $category = Categories::create($request->all());
-        return response()->json([
-            'status' => 201,
-            'message' => 'Category created successfully',
-            'data' => $category,
-        ], 201);
+        $category = new Categories();
+        $category->name = e($request->input('name'));
+        $category->user_id = auth()->user()->id;
+
+        if ($category->save()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category created successfully',
+                'data' => $category,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Failed to update the category',
+            ], 400);
+        }
     }
 
     /**
@@ -79,11 +90,12 @@ class CategoryController extends Controller
     public function update(Request $request, int $id)
     {
         $category = Categories::orderBy('id', 'DESC')->find($id);
-
-        return response()->json([
-            'status' => 400,
-            'message' => "There is no category with the id entered, please enter another one",
-        ], 400);
+        if ($category == null) {
+            return response()->json([
+                'status' => 400,
+                'message' => "There is no category with the id entered, please enter another one",
+            ], 400);
+        }
 
         // Ok: Validacion lista
 
@@ -107,12 +119,21 @@ class CategoryController extends Controller
             return response()->json($errors, 400);
         }
 
-        $category->update($request->all());
-        return response()->json([
-            'status' => 200,
-            'message' => 'Category updated successfully',
-            'data' => $category,
-        ], 200);
+        $category->name = e($request->input('name'));
+        $category->user_id = auth()->user()->id;
+
+        if ($category->save()) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Category created successfully',
+                'data' => $category,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Failed to update the category',
+            ], 400);
+        }
     }
 
     /**
@@ -131,7 +152,7 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Category deleted successfully'
+            'message' => 'Category deleted successfully',
         ], 200);
     }
 }

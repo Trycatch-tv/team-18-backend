@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\ProductController;
 // Route::middleware('api')->get('/user', [AuthController::class, 'me']);
 
 Route::group([
-    'middleware' => 'api'
+    'middleware' => ['api', 'verified'],
 ], function ($router) {
     Route::get('products', [ProductController::class, 'index'])->name('products.index');
     Route::apiResource('categories', CategoryController::class);

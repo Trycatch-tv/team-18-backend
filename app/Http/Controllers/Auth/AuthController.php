@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 
-// use App\Mail\VerifyEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Verified;
@@ -95,7 +94,7 @@ class AuthController extends Controller
     public function me()
     {
         // return response()->json($req->user(),200);
-        return response()->json(auth()->user());
+        return response()->json(auth()->user(), 200);
     }
 
     /**

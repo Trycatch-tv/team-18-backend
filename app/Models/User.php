@@ -55,8 +55,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        // $this->notify(new \Illuminate\Auth\Notifications\VerifyEmail);
-        // $urlFront = env('FRONTEND_URL');
         $this->notify(new VerifyEmailNotificationRegister);
 
     }
