@@ -14,8 +14,160 @@ class CategoryController extends Controller
         $this->middleware('auth:api');
         $this->middleware('verified');
     }
+
     /**
-     * Display a listing of the resource.
+     * List all category records
+     * @OA\Get (
+     * security={{"Bearer":{}}},
+     *     path="/api/categories",
+     *     tags={"Category"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="current_page",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="TV 50' Samsung"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",     *
+     *                              @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                                   ),
+     *                    @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="email",
+     *                         type="string",
+     *                         example="andersonjara@gmail.com"
+     *                     ),)
+     *                     ),
+     *                 )
+     *             ),
+	 *                    @OA\Property(
+     *                         property="first_page_url",
+     *                         type="string",
+     *                         example="http://127.0.0.1:8000/api/categories?page=1"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="from",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="last_page",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="last_page_url",
+     *                         type="string",
+     *                         example="http://127.0.0.1:8000/api/categories?page=1"
+     *                     ),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="links",
+	 *					example={{
+	 *                  "url": "null",
+	 *                  "label": "&laquo; Previous",
+	 *                  "active": false,
+	 *                  },{
+	 *                  "url": "http://localhost:8000/api/categories?page=1",
+	 *                  "label": "1",
+	 *                  "active": true,
+	 *                  },{
+	 *                  "url": "null",
+	 *                  "label": "Next &raquo;",
+	 *                  "active": false,
+	 *                  }},
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="url",
+     *                         type="string",
+     *                         example="null"
+     *                     ),
+	 *                     @OA\Property(
+     *                         property="label",
+     *                         type="string",
+     *                         example="&laquo; Previous"
+     *                     ),
+	 *                     @OA\Property(
+     *                         property="active",
+     *                         type="boolean",
+     *                         example="false"
+     *                     ),
+     *                 ),
+     *             ),
+	 *                    @OA\Property(
+     *                         property="next_page_url",
+     *                         type="string",
+     *                         example="null"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="path",
+     *                         type="string",
+     *                         example="http://127.0.0.1:8000/api/categories"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="per_page",
+     *                         type="number",
+     *                         example="15"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="prev_page_url",
+     *                         type="string",
+     *                         example="null"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="to",
+     *                         type="number",
+     *                         example="7"
+     *                     ),
+	 *                    @OA\Property(
+     *                         property="total",
+     *                         type="number",
+     *                         example="7"
+     *                     ),
+     *         )
+     *     ),
+     *  @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Unauthenticated"
+     *                     ),
+     *                 )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -24,7 +176,120 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Register the information of a category
+     * @OA\Post (
+     * security={{"Bearer":{}}},
+     *     path="/api/categories",
+     *     tags={"Category"},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                      type="object",
+     *                      @OA\Property(
+     *                          property="name",
+     *                          type="string"
+     *                      )
+     *                 ),
+     *                 example={
+     *                     "name":"Aderson Lara"
+     *                }
+     *             )
+     *         )
+     *      ),
+     *           @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="succes",
+     *                         type="number",
+     *                         example="200"
+     *                     ),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",     *
+     *                              @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                                   ),
+     *                    @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="email",
+     *                         type="string",
+     *                         example="andersonjara@gmail.com"
+     *                     ),)
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *   @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="400"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Oops we have detected errors"
+     *                     ),
+	 * @OA\Property(
+     *                 type="array",
+     *                 property="errors",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="array",
+     *                         @OA\Items(
+     *                          example="The name field is required."
+     *                          )
+     *                     ),
+     *                 )
+     *             )
+     *                 )
+     *         ),
+     *
+     *      @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Unauthenticated"
+     *                     ),
+     *                 )
+     *         )
+     * )
      */
     public function store(Request $request)
     {
@@ -67,16 +332,103 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Displays the information of a category
+     * @OA\Get (
+     * security={{"Bearer":{}}},
+     *     path="/api/categories/{id}",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *          in="path",
+     *          name="id",
+     *          required=true,
+     *          @OA\Schema(type="number")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="succes",
+     *                         type="number",
+     *                         example="200"
+     *                     ),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",     *
+     *                              @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                                   ),
+     *                    @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="email",
+     *                         type="string",
+     *                         example="andersonjara@gmail.com"
+     *                     ),)
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="404"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="There is no category with the id entered, please enter another one"
+     *                     ),
+     *                 )
+     *         ),
+	 @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Unauthenticated"
+     *                     ),
+     *                 )
+     *         )
+     *     )
      */
     public function show(int $id)
     {
         $category = Categories::with('user')->orderBy('id', 'DESC')->find($id);
         if ($category == null) {
             return response()->json([
-                'status' => 400,
+                'status' => 404,
                 'message' => "There is no category with the id entered, please enter another one",
-            ], 400);
+            ], 404);
         }
         return response()->json([
             'status' => 200,
@@ -85,16 +437,136 @@ class CategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the information of a category
+     * @OA\Put (
+     *     security={{"Bearer":{}}},
+     *     path="/api/categories/{id}",
+     *     tags={"Category"},
+     *      @OA\Parameter(
+     *          in="path",
+     *          name="id",
+     *          required=true,
+     *          @OA\Schema(type="number")
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="succes",
+     *                         type="number",
+     *                         example="200"
+     *                     ),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",     *
+     *                              @OA\Property(
+     *                         property="id",
+     *                         type="number",
+     *                         example="1"
+     *                                   ),
+     *                    @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         example="Aderson Jara"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="email",
+     *                         type="string",
+     *                         example="andersonjara@gmail.com"
+     *                     ),
+     *                     ),
+	 ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="400"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Oops we have detected errors"
+     *                     ),
+	 @OA\Property(
+     *                 type="array",
+     *                 property="errors",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="array",
+     *                         @OA\Items(
+     *                          example="The name field is required."
+     *                          )
+     *                     ),
+     *                 )
+     *             )
+	 )
+	 ),
+     *
+     *   @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="404"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="There is no category with the id entered, please enter another one"
+     *                     ),
+     *                 )
+     *         ),
+     *
+     *  @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Unauthenticated"
+     *                     ),
+     *                 )
+     *         )
+     * )
      */
     public function update(Request $request, int $id)
     {
         $category = Categories::orderBy('id', 'DESC')->find($id);
         if ($category == null) {
             return response()->json([
-                'status' => 400,
+                'status' => 404,
                 'message' => "There is no category with the id entered, please enter another one",
-            ], 400);
+            ], 404);
         }
 
         // Ok: Validacion lista
@@ -137,16 +609,70 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the information of a category
+     * @OA\Delete (
+     *     security={{"Bearer":{}}},
+     *     path="/api/categories/{id}",
+     *     tags={"Category"},
+     *     @OA\Parameter(
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="number")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *  @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="200"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Category deleted successfully"
+     *                     ),
+     *                 )
+     *     ),
+     *   @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+	 *						@OA\Property(
+     *                         property="status",
+     *                         type="number",
+     *                         example="404"
+     *                     ),
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="There is no category with the id entered, please enter another one"
+     *                     ),
+     *                 )
+     *         ),
+     *   @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(
+     *                         property="message",
+     *                         type="string",
+     *                         example="Unauthenticated"
+     *                     ),
+     *                 )
+     *         ),
+     * )
      */
     public function destroy(string $id)
     {
         $category = Categories::find($id);
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
+                'status' => 404,
                 'message' => "There is no category with the id entered, please enter another one",
-            ], 400);
+            ], 404);
         }
 
         $category->delete();

@@ -21,6 +21,8 @@ Route::group([
     Route::post('register', [AuthController::class, 'register']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('recovery/password',[AuthController::class, 'recoveryPassword'])->name('password.reset');
     Route::get('me', [AuthController::class, 'me']);
 
     Route::get('email/verify', [AuthController::class, 'show'])->name('verification.notice');

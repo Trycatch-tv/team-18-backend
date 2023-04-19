@@ -3,15 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\MyVerifyEmailNotification;
+use App\Notifications\VerifyEmailNotificationRegister;
+use App\Notifications\ResetPasswordNotification;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
-use App\Notifications\MyVerifyEmailNotification;
-use App\Notifications\VerifyEmailNotificationRegister;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
@@ -27,7 +28,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
-        'confirmation_token'
+        'confirmation_token',
     ];
 
     /**
@@ -41,7 +42,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'updated_at',
         'password',
         'remember_token',
-        'confirmation_token'
+        'confirmation_token',
     ];
 
     /**
@@ -62,6 +63,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function resendEmailVerificationNotification()
     {
         $this->notify(new MyVerifyEmailNotification);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function getEmailForVerification()
@@ -102,11 +108,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
-    public function products(){
+    public function products()
+    {
         return $this->hasMany(Products::class);
     }
 
-    public function categories(){
+    public function categories()
+    {
         return $this->hasMany(Categories::class);
     }
 

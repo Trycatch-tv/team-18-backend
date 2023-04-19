@@ -20,8 +20,66 @@ class ProductController extends Controller
         $this->middleware('verified');
 
     }
-    /**
-     * Display a listing of the resource.
+
+	/**
+     * List all products records
+     * @OA\Get (
+     * security={{"Bearer":{}}},
+     *     path="/api/products",
+     *     tags={"Product"},
+     *     @OA\Response(response=200, description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="current_page", type="number", example="1"),
+     *             @OA\Property(type="array", property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="number", example="1"),
+     *                     @OA\Property(property="name", type="string", example="Product name"),
+     *                     @OA\Property(property="description", type="string", example="Product description"),
+     *                     @OA\Property(property="price", type="number", format="float", example=10.99),
+     *                     @OA\Property(property="stock", type="integer", example=10),
+     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+	 *                     @OA\Property(
+     *                         property="category",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",
+     *                              @OA\Property(property="id",type="number", example="1"),
+     *                              @OA\Property(property="name", type="string", example="Category name"),
+     *                          )
+     *                     ),
+     *                     @OA\Property(property="user", type="array",
+     *                         @OA\Items(
+     *                         type="object",
+     *                              @OA\Property(property="id", type="number", example="1"),
+     *                              @OA\Property(property="name", type="string", example="User name"),
+     *                              @OA\Property(property="email", type="string", example="user@email.com"),)
+     *                         ),
+     *                 )
+     *             ),
+	 *                    @OA\Property(property="first_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=1"),
+	 *                    @OA\Property(property="from", type="number", example="1"),
+	 *                    @OA\Property(property="last_page", type="number", example="2"),
+	 *                    @OA\Property(property="last_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=2"),
+     *                    @OA\Property(type="array", property="links", example={{"url": "null", "label": "&laquo; Previous", "active": false,},{"url": "http://localhost:8000/api/products?page=1", "label": "1", "active": true,},{"url": "http://localhost:8000/api/products?page=2", "label": "2", "active": false,},{"url": "http://localhost:8000/api/products?page=2","label": "Next &raquo;", "active": false}},
+     *                     @OA\Items(
+     *                        type="object",
+        *                     @OA\Property(property="url", type="string", example="null"),
+        *                     @OA\Property(property="label", type="string", example="&laquo; Previous"),
+        *                     @OA\Property(property="active", type="boolean", example="false"),
+     *                     ),
+     *             ),
+	 *                    @OA\Property(property="next_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=2"),
+	 *                    @OA\Property(property="path", type="string", example="http://127.0.0.1:8000/api/products"),
+	 *                    @OA\Property(property="per_page", type="number", example="15"),
+	 *                    @OA\Property(property="prev_page_url",  type="string", example="null"),
+	 *                    @OA\Property(property="to", type="number", example="15"),
+	 *                    @OA\Property(property="total", type="number", example="26"),
+     *         )
+     *     ),
+     *   @OA\Response(response=401, description="Unauthenticated", @OA\JsonContent(@OA\Property(property="message", type="string", example="Unauthenticated")))
+     *   )
+     * )
      */
     public function index()
     {
@@ -30,7 +88,133 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Register the information of a product
+     * @OA\Post(
+     *     security={{"Bearer":{}}},
+     *     path="/api/products",
+     *     tags={"Product"},
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"image", "name", "description", "price", "stock", "category_id"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     description="The image to upload",
+     *                     type="string",
+     *                     format="binary"
+     *                 ),
+     *                @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                 ),
+     *                @OA\Property(
+     *                     property="price",
+     *                     type="number",
+     *                 ),
+     *                  @OA\Property(
+     *                     property="stock",
+     *                     type="number",
+     *                 ),
+     *              @OA\Property(
+     *                     property="category_id",
+     *                     type="number",
+     *                 ),
+     *             )
+     *         ),
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 required={"name", "description", "price", "stock", "image", "category_id"},
+     *                 @OA\Property(property="name", type="string", example="Product name"),
+     *                 @OA\Property(property="description", type="string", example="Product description"),
+     *                 @OA\Property(property="price", type="number", format="float", example=10.99),
+     *                 @OA\Property(property="stock", type="integer", example=10),
+     *                 @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                 @OA\Property(property="category_id", type="integer", example=1),
+     *             )
+     *     ),
+     *     ),
+     *        @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="succes", type="number", example="200"),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="number", example="1"),
+     *                     @OA\Property(property="name", type="string", example="Product name"),
+     *                     @OA\Property(property="description", type="string", example="Product description"),
+     *                     @OA\Property(property="price", type="number", format="float", example=10.99),
+     *                     @OA\Property(property="stock", type="integer", example=10),
+     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                     @OA\Property(property="category", type="array",
+     *                                  @OA\Items(
+     *                                     type="object",
+     *                                     @OA\Property(property="id", type="number", example="1"),
+     *                                     @OA\Property(property="name", type="string", example="Category name"),
+     *                                   ),
+     *                                  ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",
+     *                              @OA\Property(property="id", type="number", example="1"),
+     *                              @OA\Property(property="name", type="string", example="User name"),
+     *                              @OA\Property(property="email", type="string", example="user@email.com"),
+     *                          )
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *   @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *			  @OA\Property(property="status", type="number", example="400"),
+     *                    @OA\Property(type="array", property="errors",
+     *                    @OA\Property(property="message", type="string", example="Oops we have detected errors"),
+     *                           @OA\Items(type="object",
+     *                                  @OA\Property(property="name", type="array",
+     *                                      @OA\Items(example="The name field is required.")
+     *                                  ),
+     *                                 @OA\Property(property="price", type="array",
+     *                                      @OA\Items(example="The price field is required.")
+     *                                  ),
+     * 	                               @OA\Property(property="category_id", type="array",
+     *                                     @OA\Items(example="The category_id field is required.")
+     *                                 ),
+     * 	                               @OA\Property(property="stock", type="array",
+     *                                     @OA\Items(example="The stock field is required.")
+     *                               ),
+     *                               @OA\Property(property="description", type="array",
+     *                                     @OA\Items(example="The description field is required.")
+     *                               ),
+     * 	                            @OA\Property(property="image", type="array",
+     *                                    @OA\Items(example="The image field is required.")
+     *                              ),
+     *                        )
+     *                 )
+     *           )
+     *         ),
+     *      @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *                 )
+     *         )
+     * )
      */
     public function store(Request $request)
     {
@@ -112,7 +296,55 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Displays the information of a product
+     * @OA\Get (
+     *     security={{"Bearer":{}}},
+     *     path="/api/products/{id}",
+     *     tags={"Product"},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="number")),
+     *     @OA\Response(response=200, description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="succes", type="number", example="200"),
+     *                    @OA\Property(type="array", property="data",
+     *                    @OA\Items(
+     *                        type="object",
+     *                        @OA\Property(property="id", type="number", example="1"),
+     *                        @OA\Property(property="name", type="string", example="Product name"),
+	 *                        @OA\Property(property="description", type="string", example="Product description"),
+	 *                        @OA\Property(property="stock", type="number", example="10"),
+	 *                        @OA\Property(property="price", type="number", example="10.99"),
+	 *                        @OA\Property(property="image", type="number", example="http://example.com/products/product-image.jpg"),
+	 *                        @OA\Property(property="category", type="array",
+     *                            @OA\Items(
+     *                            type="object",
+     *                                @OA\Property(property="id",type="number",example="1"),
+     *                                @OA\Property(property="name", type="string", example="Category name"),
+     *                             )
+     *                        ),
+     *                        @OA\Property(property="user", type="array",
+     *                            @OA\Items(
+     *                            type="object",
+     *                                 @OA\Property(property="id", type="number", example="1"),
+     *                                 @OA\Property(property="name", type="string", example="User name"),
+     *                                 @OA\Property(property="email", type="string", example="user@email.com"),
+     *                            )
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *  @OA\Response(response=404, description="Not Found",
+     *         @OA\JsonContent(
+	 *			 @OA\Property(property="status", type="number", example="404"),
+     *           @OA\Property(property="message", type="string", example="There is no product with the id entered, please enter another one"),
+     *         )
+     *  ),
+	 * @OA\Response(response=401, description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *          )
+     *  )
+     *     )
      */
     public function show(string $id)
     {
@@ -130,7 +362,139 @@ class ProductController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the information of a  product
+     * @OA\Post(
+     *     security={{"Bearer":{}}},
+     *     path="/api/products/{id}",
+     *     tags={"Product"},
+     *       @OA\Parameter(
+     *          in="path",
+     *          name="id",
+     *          required=true,
+     *          @OA\Schema(type="number")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"image", "name", "description", "price", "stock", "category_id"},
+     *                 @OA\Property(
+     *                     property="image",
+     *                     description="The image to upload",
+     *                     type="string",
+     *                     format="binary"
+     *                 ),
+     *                @OA\Property(
+     *                     property="name",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="description",
+     *                     type="string",
+     *                 ),
+     *                @OA\Property(
+     *                     property="price",
+     *                     type="number",
+     *                 ),
+     *                  @OA\Property(
+     *                     property="stock",
+     *                     type="number",
+     *                 ),
+     *              @OA\Property(
+     *                     property="category_id",
+     *                     type="number",
+     *                 ),
+     *             )
+     *         ),
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 required={"name", "description", "price", "stock", "image", "category_id"},
+     *                 @OA\Property(property="name", type="string", example="Product name"),
+     *                 @OA\Property(property="description", type="string", example="Product description"),
+     *                 @OA\Property(property="price", type="number", format="float", example=10.99),
+     *                 @OA\Property(property="stock", type="integer", example=10),
+     *                 @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                 @OA\Property(property="category_id", type="integer", example=1),
+     *             )
+     *     ),
+     *     ),
+     *        @OA\Response(
+     *         response=200,
+     *         description="Ok",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="succes", type="number", example="200"),
+     *             @OA\Property(
+     *                 type="array",
+     *                 property="data",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="number", example="1"),
+     *                     @OA\Property(property="name", type="string", example="Product name"),
+     *                     @OA\Property(property="description", type="string", example="Product description"),
+     *                     @OA\Property(property="price", type="number", format="float", example=10.99),
+     *                     @OA\Property(property="stock", type="integer", example=10),
+     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                     @OA\Property(property="category", type="array",
+     *                                  @OA\Items(
+     *                                     type="object",
+     *                                     @OA\Property(property="id", type="number", example="1"),
+     *                                     @OA\Property(property="name", type="string", example="Category name"),
+     *                                   ),
+     *                                  ),
+     *                     @OA\Property(
+     *                         property="user",
+     *                         type="array",
+     *                         @OA\Items(
+     *                         type="object",
+     *                              @OA\Property(property="id", type="number", example="1"),
+     *                              @OA\Property(property="name", type="string", example="User name"),
+     *                              @OA\Property(property="email", type="string", example="user@email.com"),
+     *                          )
+     *                     ),
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *   @OA\Response(
+     *         response=400,
+     *         description="Bad Request",
+     *         @OA\JsonContent(
+     *			  @OA\Property(property="status", type="number", example="400"),
+     *                    @OA\Property(type="array", property="errors",
+     *                    @OA\Property(property="message", type="string", example="Oops we have detected errors"),
+     *                           @OA\Items(type="object",
+     *                                  @OA\Property(property="name", type="array",
+     *                                      @OA\Items(example="The name field is required.")
+     *                                  ),
+     *                                 @OA\Property(property="price", type="array",
+     *                                      @OA\Items(example="The price field is required.")
+     *                                  ),
+     * 	                               @OA\Property(property="category_id", type="array",
+     *                                     @OA\Items(example="The category_id field is required.")
+     *                                 ),
+     * 	                               @OA\Property(property="stock", type="array",
+     *                                     @OA\Items(example="The stock field is required.")
+     *                               ),
+     *                               @OA\Property(property="description", type="array",
+     *                                     @OA\Items(example="The description field is required.")
+     *                               ),
+     * 	                            @OA\Property(property="image", type="array",
+     *                                    @OA\Items(example="The image field is required.")
+     *                              ),
+     *                        )
+     *                 )
+     *           )
+     *         ),
+     *      @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *                 )
+     *         )
+     * )
      */
     public function update(string $id, Request $request)
     {
@@ -226,7 +590,36 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the information of a product
+     * @OA\Delete (
+     *     security={{"Bearer":{}}},
+     *     path="/api/products/{id}",
+     *     tags={"Product"},
+     *     @OA\Parameter(in="path", name="id", required=true,
+     *         @OA\Schema(type="number")
+     *     ),
+     *     @OA\Response(response=200, description="Ok",
+     *            @OA\JsonContent(
+	 *						@OA\Property(property="status", type="number", example="200"),
+     *                      @OA\Property(property="message", type="string", example="Product deleted successfully"),
+     *            )
+     *     ),
+     *   @OA\Response(
+     *         response=404,
+     *         description="Not Found",
+     *         @OA\JsonContent(
+	 *						@OA\Property(property="status", type="number", example="404"),
+     *                      @OA\Property(property="message", type="string", example="There is no product with the id entered, please enter another one"),
+     *                 )
+     *         ),
+     *   @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *                    @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *                 )
+     *         ),
+     * )
      */
     public function destroy(string $id)
     {
