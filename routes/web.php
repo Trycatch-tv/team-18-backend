@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Controller;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/home', function () {
-    return view('welcome');
-});
+Route::get('version', [Controller::class, 'version'])->name('version.version');
 
 Route::get('/products/{filename}', function ($filename) {
     $path = storage_path('app/public/products/' . $filename);
