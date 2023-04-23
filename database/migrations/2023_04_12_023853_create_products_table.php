@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->decimal('price', 16, 2);
             $table->string('image', 255)->nullable();
-            $table->string('image_path', 255)->nullable();
+            $table->string('public_id', 255)->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->unsignedBigInteger('user_id')->nullable();

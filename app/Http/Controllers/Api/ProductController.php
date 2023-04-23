@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProductController extends Controller
 {
@@ -233,19 +233,30 @@ class ProductController extends Controller
                 // 'image_url' => 'required|string|max:150',
             ];
 
-            if (!Storage::disk('public')->exists('products')) {
-                Storage::disk('public')->makeDirectory('products', 0775, true);
-            }
-            $slug = Str::slug($nombre, '-');
-            $fileExt = $file->getClientOriginalExtension();
-            $size = $file->getSize();
-            $fileName = rand(1, 9999) . '-' . Str::slug($nombre) . '.' . $fileExt;
-            $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
-            $filesystem = Storage::disk('public');
-            $filesystem->putFileAs('products', $file, $fileName);
+            // if (!Storage::disk('public')->exists('products')) {
+            //     Storage::disk('public')->makeDirectory('products', 0775, true);
+            // }
+            // $slug = Str::slug($nombre, '-');
+            // $fileExt = $file->getClientOriginalExtension();
+            // $size = $file->getSize();
+            // $fileName = rand(1, 9999) . '-' . Str::slug($nombre) . '.' . $fileExt;
+            // $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
+            // $filesystem = Storage::disk('public');
+            // $filesystem->putFileAs('products', $file, $fileName);
 
-            $product->image = $final_file;
-            $product->image_path = $fileName;
+
+            $fileName = rand(1, 9999) . '-' . Str::slug($nombre);
+            $obj = Cloudinary::upload($file->getRealPath(),[
+                'upload_preset' => 'trycatch',
+                'resource_type' => 'auto',
+                'folder'=>'trycatch/products',
+                'public_id' => $fileName
+            ]);
+            $public_id = $obj->getPublicId();
+            $url = $obj->getSecurePath();
+
+            $product->image = $url;
+            $product->public_id = $public_id;
         } else {
             $rules = [
                 'name' => 'required|string|max:100',
@@ -279,6 +290,7 @@ class ProductController extends Controller
         $product->description = e($request->input('description'));
         $product->category_id = $request->input('category_id');
         $product->user_id = auth()->user()->id;
+
 
         if ($product->save()) {
             return response()->json([
@@ -510,13 +522,14 @@ class ProductController extends Controller
         // return $request;
         $file = $request->file('image');
         $nombre = e($request->input('name'));
-        $image_path_bd = $product->image_path;
+        $public_id_bd = $product->public_id;
 
         // return $file;
         if ($request->hasFile('image')) {
-            if (isset($image_path_bd)) {
+            if (isset($public_id_bd)) {
                 // esto va bien
-                Storage::disk('public')->delete('products/' . $product->image_path);
+                // Storage::disk('public')->delete('products/' . $product->image_path);
+                Cloudinary::destroy($public_id_bd);
             }
 
             $rules = [
@@ -528,19 +541,33 @@ class ProductController extends Controller
                 'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             ];
 
-            if (!Storage::disk('public')->exists('products')) {
-                Storage::disk('public')->makeDirectory('products', 0775, true);
-            }
-            $slug = Str::slug($nombre, '-');
-            $fileExt = $file->getClientOriginalExtension();
-            $size = $file->getSize();
-            $fileName = rand(1, 9999) . '-' . $slug . '.' . $fileExt;
-            $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
-            $filesystem = Storage::disk('public');
-            $filesystem->putFileAs('products', $file, $fileName);
+            // if (!Storage::disk('public')->exists('products')) {
+            //     Storage::disk('public')->makeDirectory('products', 0775, true);
+            // }
+            // $slug = Str::slug($nombre, '-');
+            // $fileExt = $file->getClientOriginalExtension();
+            // $size = $file->getSize();
+            // $fileName = rand(1, 9999) . '-' . $slug . '.' . $fileExt;
+            // $final_file = $request->getSchemeAndHttpHost() . '/products/' . $fileName;
+            // $filesystem = Storage::disk('public');
+            // $filesystem->putFileAs('products', $file, $fileName);
 
-            $product->image = $final_file;
-            $product->image_path = $fileName;
+            // $product->image = $final_file;
+            // $product->image_path = $fileName;
+
+
+            $fileName = rand(1, 9999) . '-' . Str::slug($nombre);
+            $obj = Cloudinary::upload($file->getRealPath(),[
+                'upload_preset' => 'trycatch',
+                'resource_type' => 'auto',
+                'folder'=>'trycatch/products',
+                'public_id' => $fileName
+            ]);
+            $public_id = $obj->getPublicId();
+            $url = $obj->getSecurePath();
+
+            $product->image = $url;
+            $product->public_id = $public_id;
         } else {
             $rules = [
                 'name' => 'required|string|max:100',
@@ -630,10 +657,11 @@ class ProductController extends Controller
                 'message' => "There is no product with the id entered, please enter another one",
             ], 400);
         }
-        $image_path_bd = $product->image_path;
-        if (isset($image_path_bd)) {
+        $public_id_bd = $product->public_id;
+        if (isset($public_id_bd)) {
             // esto va bien
-            Storage::disk('public')->delete('products/' . $product->image_path);
+            // Storage::disk('public')->delete('products/' . $product->image_path);
+            Cloudinary::destroy($public_id_bd);
         }
         $product->delete();
         return response()->json([
