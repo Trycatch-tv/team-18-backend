@@ -71,7 +71,7 @@ class CategoryController extends Controller
 	 *                    @OA\Property(
      *                         property="first_page_url",
      *                         type="string",
-     *                         example="http://127.0.0.1:8000/api/categories?page=1"
+     *                         example="https://api-inventario.onrender.com/api/categories?page=1"
      *                     ),
 	 *                    @OA\Property(
      *                         property="from",
@@ -86,7 +86,7 @@ class CategoryController extends Controller
 	 *                    @OA\Property(
      *                         property="last_page_url",
      *                         type="string",
-     *                         example="http://127.0.0.1:8000/api/categories?page=1"
+     *                         example="https://api-inventario.onrender.com/api/categories?page=1"
      *                     ),
      *             @OA\Property(
      *                 type="array",
@@ -131,7 +131,7 @@ class CategoryController extends Controller
 	 *                    @OA\Property(
      *                         property="path",
      *                         type="string",
-     *                         example="http://127.0.0.1:8000/api/categories"
+     *                         example="https://api-inventario.onrender.com/api/categories"
      *                     ),
 	 *                    @OA\Property(
      *                         property="per_page",

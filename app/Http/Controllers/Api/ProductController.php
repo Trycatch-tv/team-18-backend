@@ -57,10 +57,10 @@ class ProductController extends Controller
      *                         ),
      *                 )
      *             ),
-	 *                    @OA\Property(property="first_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=1"),
+	 *                    @OA\Property(property="first_page_url", type="string", example="https://api-inventario.onrender.com/api/products?page=1"),
 	 *                    @OA\Property(property="from", type="number", example="1"),
 	 *                    @OA\Property(property="last_page", type="number", example="2"),
-	 *                    @OA\Property(property="last_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=2"),
+	 *                    @OA\Property(property="last_page_url", type="string", example="https://api-inventario.onrender.com/api/products?page=2"),
      *                    @OA\Property(type="array", property="links", example={{"url": "null", "label": "&laquo; Previous", "active": false,},{"url": "http://localhost:8000/api/products?page=1", "label": "1", "active": true,},{"url": "http://localhost:8000/api/products?page=2", "label": "2", "active": false,},{"url": "http://localhost:8000/api/products?page=2","label": "Next &raquo;", "active": false}},
      *                     @OA\Items(
      *                        type="object",
@@ -69,8 +69,8 @@ class ProductController extends Controller
         *                     @OA\Property(property="active", type="boolean", example="false"),
      *                     ),
      *             ),
-	 *                    @OA\Property(property="next_page_url", type="string", example="http://127.0.0.1:8000/api/products?page=2"),
-	 *                    @OA\Property(property="path", type="string", example="http://127.0.0.1:8000/api/products"),
+	 *                    @OA\Property(property="next_page_url", type="string", example="https://api-inventario.onrender.com/api/products?page=2"),
+	 *                    @OA\Property(property="path", type="string", example="https://api-inventario.onrender.com/api/products"),
 	 *                    @OA\Property(property="per_page", type="number", example="15"),
 	 *                    @OA\Property(property="prev_page_url",  type="string", example="null"),
 	 *                    @OA\Property(property="to", type="number", example="15"),

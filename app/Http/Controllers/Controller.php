@@ -14,7 +14,7 @@ use Illuminate\Foundation\Application;
  *             description="API Inventario del proyecto 3 de TryCatch"
  * )
  *
- * @OA\Server(url="http://127.0.0.1:8000")
+ * @OA\Server(url="https://api-inventario.onrender.com/")
  */
 
 class Controller extends BaseController
