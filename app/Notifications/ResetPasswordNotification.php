@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Lang;
 
 class ResetPasswordNotification extends Notification implements ShouldQueue
 {
@@ -51,9 +52,9 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         // ->line('If you did not request a password reset, no further action is required.')
         // ->salutation('Thank you for using '.$appName.'!');
 
-        if (static::$toMailCallback) {
-            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
-        }
+        // if (static::$toMailCallback) {
+        //     return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        // }
 
         return $this->buildMailMessage($notifiable, $this->resetUrl($notifiable));
 
@@ -94,9 +95,9 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 
     public function resetUrl($notifiable)
     {
-        if (static::$createUrlCallback) {
-            return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
-        }
+        // if (static::$createUrlCallback) {
+        //     return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        // }
 
         return url(config('app.url_front') . route('password.reset', [
             'token' => $this->token,
