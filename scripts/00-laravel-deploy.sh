@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-echo "Seteando TZ"
-timedatectl set-timezone America/Argentina/Cordoba
+# echo "Seteando TZ"
+# timedatectl set-timezone America/Argentina/Cordoba
 
 echo "Running composer"
 composer global require hirak/prestissimo
@@ -17,6 +17,9 @@ php artisan route:cache
 
 echo "Generando storage"
 php artisan storage:link
+
+echo "Lista de rutas"
+php artisan route:list
 
 echo "Iniciando server"
 php artisan serve --host=0.0.0.0 --port=443
