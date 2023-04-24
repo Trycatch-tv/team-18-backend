@@ -2295,6 +2295,10 @@
     },
     "components": {
         "securitySchemes": {
+            "https": {
+                "type": "http",
+                "scheme": "https"
+            },
             "Bearer": {
                 "type": "apiKey",
                 "description": "Enter token in format (Bearer <token>)",
