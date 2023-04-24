@@ -158,6 +158,8 @@ class AuthController extends Controller
             'confirmation_token' => Str::random(60),
         ]);
 
+        $user->sendEmailVerificationNotification();
+
         return response()->json(['message' => 'Registered successfully. Please check your email to verify your account.'], 201);
 
     }
