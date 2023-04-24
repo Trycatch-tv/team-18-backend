@@ -597,7 +597,7 @@ class CategoryController extends Controller
         if ($category->save()) {
             return response()->json([
                 'status' => 200,
-                'message' => 'Category created successfully',
+                'message' => 'Category updated successfully',
                 'data' => $category,
             ], 200);
         } else {
@@ -665,8 +665,9 @@ class CategoryController extends Controller
      *         ),
      * )
      */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
+        return response()->json($id, 200);
         $category = Categories::find($id);
         if ($validator->fails()) {
             return response()->json([
