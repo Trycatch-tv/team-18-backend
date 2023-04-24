@@ -52,7 +52,7 @@ class VerifyEmailNotificationRegister extends VerifyEmailNotification implements
         //     ->line(Lang::get('If you did not create an account, no further action is required.'));
 
         return (new MailMessage)
-        ->from( env('MAIL_FROM_ADDRESS'),  env('MAIL_FROM_NAME'))
+        ->from('no-reply@laravel.com', 'Laravel')
         ->subject('Verify Email Address')
         ->greeting("Hello, $notifiable->name!")
         ->line("Please click the button below to verify your email address for $appName account.")
