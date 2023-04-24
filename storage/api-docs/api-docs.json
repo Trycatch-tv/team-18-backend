@@ -2060,13 +2060,13 @@
                 }
             }
         },
-        "/auth/resend": {
+        "/auth/email/resend": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Check if the account is verified",
-                "operationId": "resend",
+                "operationId": "email-resend",
                 "requestBody": {
                     "content": {
                         "application/json": {

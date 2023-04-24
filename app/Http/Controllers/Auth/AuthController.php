@@ -325,8 +325,8 @@ class AuthController extends Controller
     /**
      * Check if the account is verified
      * @OA\Post (
-     *     path="/auth/resend",
-     *     operationId="resend",
+     *     path="/auth/email/resend",
+     *     operationId="email-resend",
      *     tags={"Auth"},
      *           @OA\RequestBody(
      *          @OA\MediaType(
