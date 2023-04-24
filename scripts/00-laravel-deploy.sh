@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+echo "Seteando TZ"
+timedatectl set-timezone America/Argentina/Cordoba
+
 echo "Running composer"
 composer global require hirak/prestissimo
 composer install --no-dev --working-dir=/var/www/html
@@ -9,8 +12,8 @@ php artisan config:cache
 echo "Caching routes..."
 php artisan route:cache
 
-echo "Running migrations..."
-php artisan migrate --force
+# echo "Running migrations..."
+# php artisan migrate --force
 
 echo "Generando storage"
 php artisan storage:link
