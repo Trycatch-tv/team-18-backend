@@ -120,4 +120,11 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+
+    'views' => [
+        'html' => 'resources/views/emails/html',
+        'text' => 'resources/views/emails/text',
+        'raw' => 'resources/views/emails/html',
+    ],
+
 ];
