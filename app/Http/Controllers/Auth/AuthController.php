@@ -25,8 +25,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'show', 'verify', 'resend', 'forgotPassword', 'recoveryPassword']]);
-        $this->middleware('verified', ['except' => ['register', 'show', 'verify', 'resend', 'forgotPassword', 'recoveryPassword']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'verify', 'resend', 'forgotPassword', 'recoveryPassword']]);
+        $this->middleware('verified', ['except' => ['register', 'verify', 'resend', 'forgotPassword', 'recoveryPassword']]);
     }
 
     /**
@@ -261,21 +261,6 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
-    }
-
-    /**
-     * Check if the account is verified
-     * @OA\Get (
-     *     path="/auth/email/verify",
-     *     operationId="verify-email",
-     *     tags={"Auth"},
-     *            @OA\Response(response=200, description="Ok", @OA\JsonContent(@OA\Property(property="message", type="string", example="Please verify your email address."),)),
-     *            @OA\Response(response=401, description="Unauthenticated", @OA\JsonContent(@OA\Property(property="message", type="string", example="Unauthenticated"),))
-     * )
-     */
-    public function show()
-    {
-        return response()->json(['message' => 'Please verify your email address.']);
     }
 
     /**
