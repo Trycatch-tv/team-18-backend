@@ -668,7 +668,7 @@ class CategoryController extends Controller
     public function destroy(int $id)
     {
         $category = Categories::find($id);
-        if ($validator->fails()) {
+        if ($category == null) {
             return response()->json([
                 'status' => 404,
                 'message' => "There is no category with the id entered, please enter another one",
