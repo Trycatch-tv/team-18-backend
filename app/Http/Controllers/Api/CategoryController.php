@@ -667,7 +667,6 @@ class CategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        return response()->json($id, 200);
         $category = Categories::find($id);
         if ($validator->fails()) {
             return response()->json([
