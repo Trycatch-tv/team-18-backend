@@ -38,7 +38,7 @@ class ProductController extends Controller
      *                     @OA\Property(property="description", type="string", example="Product description"),
      *                     @OA\Property(property="price", type="number", format="float", example=10.99),
      *                     @OA\Property(property="stock", type="integer", example=10),
-     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                     @OA\Property(property="image", type="string", example="https://example.com/products/product.jpg"),
 	 *                     @OA\Property(
      *                         property="category",
      *                         type="array",
@@ -61,7 +61,7 @@ class ProductController extends Controller
 	 *                    @OA\Property(property="from", type="number", example="1"),
 	 *                    @OA\Property(property="last_page", type="number", example="2"),
 	 *                    @OA\Property(property="last_page_url", type="string", example="https://api-inventario.onrender.com/api/products?page=2"),
-     *                    @OA\Property(type="array", property="links", example={{"url": "null", "label": "&laquo; Previous", "active": false,},{"url": "http://localhost:8000/api/products?page=1", "label": "1", "active": true,},{"url": "http://localhost:8000/api/products?page=2", "label": "2", "active": false,},{"url": "http://localhost:8000/api/products?page=2","label": "Next &raquo;", "active": false}},
+     *                    @OA\Property(type="array", property="links", example={{"url": "null", "label": "&laquo; Previous", "active": false,},{"url": "https://api-inventario.onrender.com/api/products?page=1", "label": "1", "active": true,},{"url": "https://api-inventario.onrender.com/api/products?page=2", "label": "2", "active": false,},{"url": "https://api-inventario.onrender.com/api/products?page=2","label": "Next &raquo;", "active": false}},
      *                     @OA\Items(
      *                        type="object",
         *                     @OA\Property(property="url", type="string", example="null"),
@@ -135,7 +135,7 @@ class ProductController extends Controller
      *                 @OA\Property(property="description", type="string", example="Product description"),
      *                 @OA\Property(property="price", type="number", format="float", example=10.99),
      *                 @OA\Property(property="stock", type="integer", example=10),
-     *                 @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                 @OA\Property(property="image", type="string", example="https://example.com/products/product.jpg"),
      *                 @OA\Property(property="category_id", type="integer", example=1),
      *             )
      *     ),
@@ -155,7 +155,7 @@ class ProductController extends Controller
      *                     @OA\Property(property="description", type="string", example="Product description"),
      *                     @OA\Property(property="price", type="number", format="float", example=10.99),
      *                     @OA\Property(property="stock", type="integer", example=10),
-     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                     @OA\Property(property="image", type="string", example="https://example.com/products/product.jpg"),
      *                     @OA\Property(property="category", type="array",
      *                                  @OA\Items(
      *                                     type="object",
@@ -325,7 +325,7 @@ class ProductController extends Controller
 	 *                        @OA\Property(property="description", type="string", example="Product description"),
 	 *                        @OA\Property(property="stock", type="number", example="10"),
 	 *                        @OA\Property(property="price", type="number", example="10.99"),
-	 *                        @OA\Property(property="image", type="number", example="http://example.com/products/product-image.jpg"),
+	 *                        @OA\Property(property="image", type="number", example="https://example.com/products/product-image.jpg"),
 	 *                        @OA\Property(property="category", type="array",
      *                            @OA\Items(
      *                            type="object",
@@ -447,7 +447,7 @@ class ProductController extends Controller
      *                     @OA\Property(property="description", type="string", example="Product description"),
      *                     @OA\Property(property="price", type="number", format="float", example=10.99),
      *                     @OA\Property(property="stock", type="integer", example=10),
-     *                     @OA\Property(property="image", type="string", example="http://example.com/products/product.jpg"),
+     *                     @OA\Property(property="image", type="string", example="https://example.com/products/product.jpg"),
      *                     @OA\Property(property="category", type="array",
      *                                  @OA\Items(
      *                                     type="object",

@@ -5,9 +5,11 @@
         "description": "API Inventario del proyecto 3 de TryCatch",
         "version": "1.0"
     },
-    "servers": [{
-        "url": "https://api-inventario.onrender.com/"
-    }],
+    "servers": [
+        {
+            "url": "https://api-inventario.onrender.com/"
+        }
+    ],
     "paths": {
         "/api/categories": {
             "get": {
@@ -98,13 +100,14 @@
                                                 },
                                                 "type": "object"
                                             },
-                                            "example": [{
+                                            "example": [
+                                                {
                                                     "url": "null",
                                                     "label": "&laquo; Previous",
                                                     "active": false
                                                 },
                                                 {
-                                                    "url": "https://api-inventario.onrender.com/api/categories?page=1",
+                                                    "url": "https://localhost:8000/api/categories?page=1",
                                                     "label": "1",
                                                     "active": true
                                                 },
@@ -162,9 +165,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -298,9 +303,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/api/categories/{id}": {
@@ -310,14 +317,16 @@
                 ],
                 "summary": "Displays the information of a category",
                 "operationId": "09767bb2e47dde77dd1e2591428b0ae1",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -408,9 +417,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -418,14 +429,16 @@
                 ],
                 "summary": "Update the information of a category",
                 "operationId": "7dcf71887e585de7f881e9eb98d86126",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -550,9 +563,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -560,14 +575,16 @@
                 ],
                 "summary": "Delete the information of a category",
                 "operationId": "9b61b65823f4a21f182506b34ddf805c",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -626,9 +643,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/api/products": {
@@ -676,7 +695,7 @@
                                                     },
                                                     "image": {
                                                         "type": "string",
-                                                        "example": "http://example.com/products/product.jpg"
+                                                        "example": "https://example.com/products/product.jpg"
                                                     },
                                                     "category": {
                                                         "type": "array",
@@ -753,7 +772,8 @@
                                                 },
                                                 "type": "object"
                                             },
-                                            "example": [{
+                                            "example": [
+                                                {
                                                     "url": "null",
                                                     "label": "&laquo; Previous",
                                                     "active": false
@@ -822,9 +842,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -899,7 +921,7 @@
                                     },
                                     "image": {
                                         "type": "string",
-                                        "example": "http://example.com/products/product.jpg"
+                                        "example": "https://example.com/products/product.jpg"
                                     },
                                     "category_id": {
                                         "type": "integer",
@@ -949,7 +971,7 @@
                                                     },
                                                     "image": {
                                                         "type": "string",
-                                                        "example": "http://example.com/products/product.jpg"
+                                                        "example": "https://example.com/products/product.jpg"
                                                     },
                                                     "category": {
                                                         "type": "array",
@@ -1080,9 +1102,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/api/products/{id}": {
@@ -1092,14 +1116,16 @@
                 ],
                 "summary": "Displays the information of a product",
                 "operationId": "c87fb2e4d617e7b36c712cad358acdb8",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -1137,7 +1163,7 @@
                                                     },
                                                     "image": {
                                                         "type": "number",
-                                                        "example": "http://example.com/products/product-image.jpg"
+                                                        "example": "https://example.com/products/product-image.jpg"
                                                     },
                                                     "category": {
                                                         "type": "array",
@@ -1222,9 +1248,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -1232,14 +1260,16 @@
                 ],
                 "summary": "Update the information of a  product",
                 "operationId": "c59edecc7aef49bec5352dd0cb536524",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -1357,7 +1387,7 @@
                                                     },
                                                     "image": {
                                                         "type": "string",
-                                                        "example": "http://example.com/products/product.jpg"
+                                                        "example": "https://example.com/products/product.jpg"
                                                     },
                                                     "category": {
                                                         "type": "array",
@@ -1488,9 +1518,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1498,14 +1530,16 @@
                 ],
                 "summary": "Delete the information of a product",
                 "operationId": "b49ce9f3cb168b233245548fb4ef36d3",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Ok",
@@ -1564,9 +1598,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/auth/login": {
@@ -1793,9 +1829,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/auth/logout": {
@@ -1839,9 +1877,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/auth/refresh": {
@@ -1893,9 +1933,11 @@
                         }
                     }
                 },
-                "security": [{
-                    "Bearer": []
-                }]
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
             }
         },
         "/auth/email/verify": {
@@ -1948,7 +1990,8 @@
                 ],
                 "summary": "Verify the user's email address.",
                 "operationId": "email-verify-id-hash",
-                "parameters": [{
+                "parameters": [
+                    {
                         "name": "id",
                         "in": "path",
                         "required": true,
@@ -2168,7 +2211,8 @@
                 ],
                 "summary": "Recovery the password using a recovery token.",
                 "operationId": "recovery-password",
-                "parameters": [{
+                "parameters": [
+                    {
                         "name": "token",
                         "in": "path",
                         "required": true,

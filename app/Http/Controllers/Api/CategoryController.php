@@ -96,7 +96,7 @@ class CategoryController extends Controller
 	 *                  "label": "&laquo; Previous",
 	 *                  "active": false,
 	 *                  },{
-	 *                  "url": "http://localhost:8000/api/categories?page=1",
+	 *                  "url": "https://localhost:8000/api/categories?page=1",
 	 *                  "label": "1",
 	 *                  "active": true,
 	 *                  },{
