@@ -2,11 +2,11 @@
 
 namespace App\Notifications;
 
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Auth\Notifications\ResetPassword;
 
 class ResetPasswordNotification extends Notification implements ShouldQueue
 {
@@ -41,7 +41,6 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         $appName = config('app.name');
         $appUrl = config('app.url');
 
-
         // return (new MailMessage)
         // ->from('no-reply@laravel.com', 'Laravel')
         // ->subject('Reset Password')
@@ -52,39 +51,33 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         // ->line('If you did not request a password reset, no further action is required.')
         // ->salutation('Thank you for using '.$appName.'!');
 
-        return (new ResetPassword($this->token))->buildMailMessage($notifiable);
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        }
+
+        return $this->buildMailMessage($notifiable, $this->resetUrl($notifiable));
+
+        // return (new ResetPassword($this->token))->buildMailMessage($this->resetUrl($notifiable));
     }
 
-        /**
+    /**
      * Build the mail representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function buildMailMessage($notifiable)
+    public function buildMailMessage($notifiable, $url)
     {
         $appName = config('app.name');
-        $appUrl = config('app.url');
         return (new MailMessage)
-        ->from('inventario-trycatchtv@outlook.com', 'No Reply - Inventario Trycatch')
-        ->subject('Reset Password')
-        ->greeting("Hello, $notifiable->name!")
-        ->line("You are receiving this email because we received a password reset request for your account.")
-        ->action('Reset Password', url(config('app.url_front').route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
-        ->line('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')])
-        ->line('If you did not request a password reset, no further action is required.')
-        ->salutation('Thank you for using '.$appName.'!');
-
-
-
-
-
-        return (new MailMessage)
-            ->subject('¡Restablece tu contraseña!')
-            ->greeting('Hola,')
-            ->line('Recibes este correo electrónico porque recibimos una solicitud de restablecimiento de contraseña para tu cuenta.')
-            ->action('Restablecer contraseña', url(config('app.url').route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
-            ->line('Si no solicitaste un restablecimiento de contraseña, no se requiere ninguna otra acción de tu parte.');
+            ->from('inventario-trycatchtv@outlook.com', 'No Reply - Inventario Trycatch')
+            ->subject(Lang::get('Reset Password'))
+            ->greeting("Hello, $notifiable->name!")
+            ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
+            ->action(Lang::get('Reset Password'), $url)
+            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')]))
+            ->line(Lang::get('If you did not request a password reset, no further action is required.'))
+            ->salutation('Thank you for using ' . $appName . '!');
     }
 
     /**
@@ -97,5 +90,17 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    public function resetUrl($notifiable)
+    {
+        if (static::$createUrlCallback) {
+            return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        }
+
+        return url(config('app.url_front') . route('password.reset', [
+            'token' => $this->token,
+            'email' => $notifiable->getEmailForPasswordReset(),
+        ], false));
     }
 }
